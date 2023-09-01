@@ -33,6 +33,18 @@ dictionary = {row.letter:row.code for (index,row) in data_frame.iterrows()}
 print(dictionary)
 
 #TODO 2. Create a list of the phonetic code words from a word that the user inputs.
-user_input = input("What is your name? \n")
+def validate_input(user_text):
+    for letter in user_input.upper():
+        if letter not in dictionary:
+            return False
+    return True
+
+user_input = input("Enter a word? \n")
+valid_input = validate_input(user_input)
+
+while valid_input == False:
+    user_input = input("Enter a word? \n")
+    valid_input = validate_input(user_input)
+
 result = [dictionary.get(letter) for letter in user_input.upper()]
 print(result)
