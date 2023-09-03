@@ -70,7 +70,7 @@ def find_password():
                 password = data.get(key)["password"]
                 email = data.get(key)["email"]
                 messagebox.showinfo("found", f"Password is {password} \n and email is {email}")
-        if pw_found == False:
+        if not pw_found:
             messagebox.showinfo("not found")
 
 # ---------------------------- UI SETUP ------------------------------- #
