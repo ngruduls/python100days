@@ -1,3 +1,4 @@
+import json
 from tkinter import *
 from tkinter import messagebox
 from random import *
@@ -32,19 +33,46 @@ def add_entry():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
+    new_data = {website: {
+        "email": email,
+        "password" : password
+    }}
     entry = website + " | " + email + " | " + password + "\n"
     print(entry)
 
     if len(website) == 0 or len(password) == 0:
         messagebox.showinfo("something wrong", "Please make sure")
     else:
-        is_ok = messagebox.askokcancel(title=website, message=f"These are details entered: \n Email: {email} \n Password: {password}\n "
-                                                      f"is it ok to save")
-    if is_ok:
-        with open("data.txt", "a") as file:
-            file.write(entry)
+        try:
+            with open("data.json", "r") as data_file:
+                data = json.load(data_file)
+                data.update(new_data)
+        except FileNotFoundError:
+            with open("data.json", "w") as data_file:
+                data = new_data
+        finally:
+            with open("data.json", "w") as data_file:
+                json.dump(data, data_file, indent=4)
         website_entry.delete(0, END)
         password_entry.delete(0, END)
+
+def find_password():
+    website = website_entry.get()
+    try:
+        with open("data.json", "r") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="no data file found")
+    else:
+        pw_found = False
+        for key in data:
+            if key == website:
+                password = data.get(key)["password"]
+                email = data.get(key)["email"]
+                messagebox.showinfo("found", f"Password is {password} \n and email is {email}")
+        if pw_found == False:
+            messagebox.showinfo("not found")
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password manager")
@@ -78,6 +106,8 @@ generate_pw_button = Button(text="Generate Password", command=generate_password)
 generate_pw_button.grid(row=3, column=2)
 add_button = Button(text="Add", width=30, command=add_entry)
 add_button.grid(row=4, column =1, columnspan=2)
+search_button = Button(text="Search", width=15, command=find_password)
+search_button.grid(row=1, column=2)
 
 
 
