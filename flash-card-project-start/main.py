@@ -9,18 +9,22 @@ eng_french_dict = data.to_dict('records')
 print(eng_french_dict)
 total_words = len(eng_french_dict)
 idx = 0
+flip_action = None
 def next_card():
     global idx
+    global flip_action
+    if flip_action != None:
+        window.after_cancel(flip_action)
     idx = random.randint(0,total_words - 1)
     fra_word = eng_french_dict[idx]["French"]
     canvas.itemconfig(card_title, text="French", fill="black")
     canvas.itemconfig(card_word, text=f"{fra_word}", fill="black")
-    canvas.itemconfig(canvas_image, image=card_front)
+    canvas.itemconfig(background_image, image=card_front)
     flip_action = window.after(3000, flip_card)
 def flip_card():
     eng_word = eng_french_dict[idx]["English"]
     # to change the image
-    canvas.itemconfig(canvas_image, image=card_back)
+    canvas.itemconfig(background_image, image=card_back)
     canvas.itemconfig(card_title, text="English", fill="white")
     canvas.itemconfig(card_word, text=f"{eng_word}", fill="white")
     # cancel flipping
@@ -35,7 +39,7 @@ window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 canvas = Canvas(width=800, height=526, highlightthickness=0)
 card_front = PhotoImage(file="images/card_front.png")
 card_back = PhotoImage(file="images/card_back.png")
-canvas_image = canvas.create_image(400, 263, image=card_front)
+background_image = canvas.create_image(400, 263, image=card_front)
 canvas.config(bg=BACKGROUND_COLOR)
 canvas.grid(row=0, column=0, columnspan=2)
 card_title = canvas.create_text(400, 150, text="", font=("Ariel", 40, "italic"))
