@@ -1,34 +1,52 @@
 import random
+from pathlib import Path
 from tkinter import *
 import pandas
 
 # ---------------------------randomness----------------------------------#
-data = pandas.read_csv("data/french_words.csv")
-print(type(data))
-eng_french_dict = data.to_dict('records')
-print(eng_french_dict)
-total_words = len(eng_french_dict)
+to_learn = {}
+# try:
+#     data = pandas.read_csv("data/words_to_learn.csv")
+# except FileNotFoundError:
+#     original_data = pandas.read_csv("data/french_words.csv")
+#     to_learn = original_data.to_dict('records')
+# else:
+#     to_learn = data.to_dict('records')
+path = Path("data/words_to_learn.csv")
+if path.is_file():
+    data = pandas.read_csv("data/words_to_learn.csv")
+else:
+    data = pandas.read_csv("data/french_words.csv")
+to_learn = data.to_dict('records')
 idx = 0
 flip_action = None
+first_run = None
 def next_card():
     global idx
     global flip_action
     if flip_action != None:
         window.after_cancel(flip_action)
+    total_words = len(to_learn)
     idx = random.randint(0,total_words - 1)
-    fra_word = eng_french_dict[idx]["French"]
+    fra_word = to_learn[idx]["French"]
     canvas.itemconfig(card_title, text="French", fill="black")
     canvas.itemconfig(card_word, text=f"{fra_word}", fill="black")
     canvas.itemconfig(background_image, image=card_front)
     flip_action = window.after(3000, flip_card)
 def flip_card():
-    eng_word = eng_french_dict[idx]["English"]
+    eng_word = to_learn[idx]["English"]
     # to change the image
     canvas.itemconfig(background_image, image=card_back)
     canvas.itemconfig(card_title, text="English", fill="white")
     canvas.itemconfig(card_word, text=f"{eng_word}", fill="white")
     # cancel flipping
     #window.after_cancel(flip_action)
+def is_known():
+    to_learn.remove(to_learn[idx])
+    print(len(to_learn))
+    data = pandas.DataFrame(to_learn)
+    data.to_csv("data/words_to_learn.csv", index=False)
+    next_card()
 
 # ---------------------------- UI SETUP ------------------------------- #
 BACKGROUND_COLOR = "#B1DDC6"
@@ -51,7 +69,7 @@ unknown_button = Button(image=cross_image, highlightthickness=0, command=next_ca
 unknown_button.grid(row=1, column=0)
 
 check_img = PhotoImage(file="images/right.png")
-known_button = Button(image=check_img, highlightthickness=0, command=next_card)
+known_button = Button(image=check_img, highlightthickness=0, command=is_known)
 known_button.grid(row=1, column=1)
 
 next_card()
