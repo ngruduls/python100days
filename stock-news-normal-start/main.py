@@ -1,4 +1,6 @@
 import datetime
+import os
+
 import requests
 from twilio.rest import Client
 
@@ -84,7 +86,7 @@ if diff_percent > 2:
     print(data)
 
     #TODO 7. - Use Python slice operator to create a list that contains the first 3 articles. Hint: https://stackoverflow.com/questions/509211/understanding-slice-notation
-    three_articles = data["articles"][:3]
+    three_articles = data["articles"][:1]
     print(three_articles)
 
     ## STEP 3: Use twilio.com/docs/sms/quickstart/python
@@ -95,10 +97,10 @@ if diff_percent > 2:
     print(formatted_articles)
 
     #TODO 9. - Send each article as a separate message via Twilio.
-    account_sid = 'ACed633f5511e4a7de1bcdbe8652b6a4f3'
-    auth_token = '9c2fd612f6f64d44520bef2590aeac10'
+    account_sid = os.environ.get('twilio_API_account_sid')
+    auth_token = os.environ.get('twilio_API_auth_token')
+    print(account_sid, auth_token)
     client = Client(account_sid, auth_token)
-
     for article in formatted_articles[:2]:
         message = client.messages.create(
             from_='+12562865552',
