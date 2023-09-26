@@ -1,0 +1,2 @@
+APP_ID = "9ea1820c"
+API_KEY = "94b4986f3bc5f47f610cfe0ed3104511"
