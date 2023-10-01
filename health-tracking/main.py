@@ -3,11 +3,11 @@ import requests
 from datetime import datetime
 
 APP_ID = "9ea1820c"
-API_KEY = os.environ.get('nutritionix_api_key')
+API_KEY = os.environ.get("nutritionix_api_key")
 
 exercise_endpoint = "https://trackapi.nutritionix.com/v2/natural/exercise"
 sheet_endpoint = "https://api.sheety.co/464e0305c4e96ea7d2620795c3df0634/workoutTracking/workouts"
-TOKEN = os.environ.get('sheety_token')
+TOKEN = os.environ.get("sheety_token")
 
 exercise_text = input("what did you do (exercise): ")
 
