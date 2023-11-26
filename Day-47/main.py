@@ -1,6 +1,7 @@
 import requests
 import lxml
 from bs4 import BeautifulSoup
+import smtplib
 
 URL = "https://www.amazon.com/dp/B075CYMYK6?ref_=cm_sw_r_cp_ud_ct_FM9M699VKHTT47YD50Q6&th=1"
 
@@ -26,3 +27,17 @@ item_price = item_prices[0].getText()
 price_without_currency = item_price.split("$")[1]
 price_as_float = float(price_without_currency)
 print(price_as_float)
+
+BUY_PRICE = 200
+
+if price_as_float < BUY_PRICE:
+    message = f"price is now {price_as_float}"
+
+    with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+        connection.starttls()
+        result = connection.login("nauris.gruduls@gmail.com", "lgsabbkgxsmjntkc")
+        connection.sendmail(
+            from_addr="nauris.gruduls@gmail.com",
+            to_addrs="nauris.gruduls@gmail.com",
+            msg=f"Subject:Amazon Price Alert! \n\n {message}".encode("utf-8")
+        )
