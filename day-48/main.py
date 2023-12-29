@@ -33,7 +33,10 @@ for time in times:
 locations = driver.find_elements(By.CSS_SELECTOR, value=".event-widget .shrubbery ul li a")
 
 for i in range(len(times)):
-    my_dict[i] = {"time": times_reformatted[i], "name": locations[i].text}
+    my_dict[i] = {
+        "time": times_reformatted[i],
+        "name": locations[i].text
+    }
 
 print(my_dict)
 
